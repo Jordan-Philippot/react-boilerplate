@@ -1,48 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Style
+//  ----- Styles  -----
 import './styles/App.scss';
 
-// Components
-import LocationUrl from './components/Location'
-import Header from './components/sections/Header'
+//  ----- Components -----
+import LocationUrl from './components/tools/Location'
+import Loader from './components/tools/Loader'
+import Cursor from './components/tools/Cursor'
+
+import Header from './components/sections/HeaderDesktop'
 import Footer from './components/sections/Footer'
 
-// Pages
+//  ----- Pages  -----
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 
 
 export default function App() {
-  const [location, setLocation] = useState('')
 
+  // eslint-disable-next-line
+  const [location, setLocation] = useState('')
+  const [loaded, setLoaded] = useState(false)
+
+  // ----- Animation loader -----
+  useEffect(() => {
+    setTimeout(() => {
+      setLoaded(true)
+    }, 1000);
+    // eslint-disable-next-line
+  }, [])
 
   return (
     <Router>
-      <div className="App">
 
-        {/* ----- Get URL location ----- */}
-        <LocationUrl setLocation={setLocation} />
+      {!loaded ?
 
+        <Loader />
 
-        <Header />
+        :
 
+        <div className="App">
 
-        <Routes>
-          {/* ----- 404 Not Found ----- */}
-          <Route path="*" element={<NotFound />} />
+          <Header />
 
-          {/* ----- Homepage ----- */}
-          <Route exact path="/" element={<Home />} />
+          <Cursor />
 
-        </Routes>
+          {/* ----- Get URL location ----- */}
+          <LocationUrl setLocation={setLocation} />
 
 
+          <Routes>
+            {/* ----- 404 Not Found ----- */}
+            <Route path="*" element={<NotFound />} />
 
-        <Footer />
+            {/* ----- Homepage ----- */}
+            <Route exact path="/" element={<Home />} />
 
-      </div >
+          </Routes>
+
+
+          <Footer />
+
+        </div >
+      }
+
     </Router>
   );
 }
